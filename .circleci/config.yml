@@ -1,0 +1,67 @@
+version: 2.1
+
+references:
+  workspace_root: &workspace_root
+    ~/repo
+
+executors:
+  nodejs:
+    working_directory: *workspace_root
+    docker:
+      - image: circleci/node:10.15.3
+  buildpack_deps:
+    working_directory: *workspace_root
+    docker:
+      - image: circleci/buildpack-deps
+
+commands:
+  restore_npm_deps:
+    steps:
+      - restore_cache:
+          name: Restore Cache - .npm
+          keys:
+            - npm-deps-{{ checksum "package-lock.json" }}
+            - npm-deps-
+  save_npm_deps:
+    steps:
+      - save_cache:
+          name: Save Cache - .npm
+          paths:
+            - ~/.npm
+          key: npm-deps-{{ checksum "package-lock.json" }}
+
+jobs:
+  test:
+    executor:
+      name: nodejs
+    steps:
+      - checkout
+      - restore_npm_deps
+      - run: npm ci
+      - save_npm_deps
+      - run: npm test
+  build:
+    executor:
+      name: nodejs
+    steps:
+      - checkout
+      - restore_npm_deps
+      - run: npm ci
+      - save_npm_deps
+      - run: npm run dist:linux
+        # npm run dist:mac && \
+        # npm run dist:win && \
+      - store_artifacts:
+          path: build
+          destination: build
+
+workflows:
+  test_build:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master

@@ -1,0 +1,29 @@
+{
+  "name": "guide-markdown-editor-build",
+  "version": "0.0.1",
+  "description": "guide-markdown-editor",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "pack": "electron-builder --dir",
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist:mac": "npm run dist -- --mac --x64",
+    "dist:win": "npm run dist -- --win --x64",
+    "dist:linux": "npm run dist -- --linux --x64",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "author": "sugarshin",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "4.1.4",
+    "electron-builder": "20.39.0"
+  },
+  "build": {
+    "appId": "com.electron.guide-markdown-editor",
+    "productName": "Guide Markdown Editor",
+    "directories": {
+      "output": "build"
+    }
+  }
+}
