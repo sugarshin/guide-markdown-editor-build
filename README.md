@@ -1,3 +1,3 @@
 # guide-markdown-editor-build
 
-Desktop App Builder for guide-markdown-editor.
+Desktop Application Builder for guide-markdown-editor.
